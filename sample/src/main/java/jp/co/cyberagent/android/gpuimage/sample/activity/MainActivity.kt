@@ -24,18 +24,17 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import jp.co.cyberagent.android.gpuimage.sample.R
 
 class MainActivity : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(jp.co.cyberagent.android.gpuimage.R.layout.activity_main)
 
-        findViewById<View>(R.id.button_gallery).setOnClickListener {
+        findViewById<View>(jp.co.cyberagent.android.gpuimage.R.id.button_gallery).setOnClickListener {
             startActivity(Intent(this, GalleryActivity::class.java))
         }
-        findViewById<View>(R.id.button_camera).setOnClickListener {
+        findViewById<View>(jp.co.cyberagent.android.gpuimage.R.id.button_camera).setOnClickListener {
             if (!hasCameraPermission() || !hasStoragePermission()) {
                 ActivityCompat.requestPermissions(
                     this,

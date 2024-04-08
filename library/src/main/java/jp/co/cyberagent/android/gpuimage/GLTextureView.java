@@ -42,13 +42,13 @@ public class GLTextureView extends TextureView
 
     private final static String TAG = GLTextureView.class.getSimpleName();
 
-    private final static boolean LOG_ATTACH_DETACH = false;
-    private final static boolean LOG_THREADS = false;
-    private final static boolean LOG_PAUSE_RESUME = false;
-    private final static boolean LOG_SURFACE = false;
-    private final static boolean LOG_RENDERER = false;
-    private final static boolean LOG_RENDERER_DRAW_FRAME = false;
-    private final static boolean LOG_EGL = false;
+    private final static boolean LOG_ATTACH_DETACH = true;
+    private final static boolean LOG_THREADS = true;
+    private final static boolean LOG_PAUSE_RESUME = true;
+    private final static boolean LOG_SURFACE = true;
+    private final static boolean LOG_RENDERER = true;
+    private final static boolean LOG_RENDERER_DRAW_FRAME = true;
+    private final static boolean LOG_EGL = true;
 
     /**
      * The renderer only renders
@@ -1142,6 +1142,7 @@ public class GLTextureView extends TextureView
                 guardedRun();
             } catch (InterruptedException e) {
                 // fall thru and exit normally
+                Log.d("CaraTest", "Error in gl thread", e);
             } finally {
                 glThreadManager.threadExiting(this);
             }

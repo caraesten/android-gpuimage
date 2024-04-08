@@ -17,6 +17,7 @@
 package jp.co.cyberagent.android.gpuimage;
 
 import android.graphics.Bitmap;
+import android.hardware.HardwareBuffer;
 
 public class GPUImageNativeLibrary {
     static {
@@ -28,4 +29,6 @@ public class GPUImageNativeLibrary {
     public static native void YUVtoARBG(byte[] yuv, int width, int height, int[] out);
 
     public static native void adjustBitmap(Bitmap srcBitmap);
+
+    public static native int drawHardwareBufferToTexture(int width, int height, int format, int internalFormat, int type, HardwareBuffer hardwareBuffer);
 }

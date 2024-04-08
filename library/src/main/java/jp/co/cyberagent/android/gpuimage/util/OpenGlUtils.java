@@ -16,14 +16,25 @@
 
 package jp.co.cyberagent.android.gpuimage.util;
 
+import static android.opengl.GLES20.GL_RGB;
+import static android.opengl.GLES20.GL_RGBA;
+import static android.opengl.GLES20.GL_UNSIGNED_BYTE;
+import static android.opengl.GLES20.glTexSubImage2D;
+
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.hardware.Camera.Size;
+import android.hardware.HardwareBuffer;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.os.Build;
 import android.util.Log;
 
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+
+import jp.co.cyberagent.android.gpuimage.GPUImageNativeLibrary;
 
 public class OpenGlUtils {
     public static final int NO_TEXTURE = -1;
@@ -46,7 +57,25 @@ public class OpenGlUtils {
             GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
                     GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
 
-            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, img, 0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && img.getConfig() == Config.HARDWARE) {
+                final int internalFormat;
+                final int format;
+                final int bufferFormat = img.getHardwareBuffer().getFormat();
+                if (bufferFormat == HardwareBuffer.RGB_888) {
+                    internalFormat = GL_RGB;
+                    format = GL_RGB;
+                } else if (bufferFormat == HardwareBuffer.RGBA_8888) {
+                    internalFormat = GL_RGBA;
+                    format = GL_RGBA;
+                } else {
+                    throw new IllegalStateException("Hardware buffers in just RGB_888 and RGBA_8888 supported");
+                }
+                // TODO (work w/ float bitmaps)
+                final int type = GL_UNSIGNED_BYTE;
+                GPUImageNativeLibrary.drawHardwareBufferToTexture(img.getWidth(), img.getHeight(), format, internalFormat, type, img.getHardwareBuffer());
+            } else {
+                GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, img, 0);
+            }
         } else {
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, usedTexId);
             GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, img);
@@ -72,11 +101,11 @@ public class OpenGlUtils {
             GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
                     GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
             GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, width, height,
-                    0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, data);
+                    0, GLES20.GL_RGBA, GL_UNSIGNED_BYTE, data);
         } else {
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, usedTexId);
-            GLES20.glTexSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, width,
-                    height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, data);
+            glTexSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, width,
+                    height, GLES20.GL_RGBA, GL_UNSIGNED_BYTE, data);
             textures[0] = usedTexId;
         }
         return textures[0];
