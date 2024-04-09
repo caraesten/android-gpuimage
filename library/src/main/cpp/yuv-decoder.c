@@ -140,7 +140,6 @@ Java_jp_co_cyberagent_android_gpuimage_GPUImageNativeLibrary_drawHardwareBufferT
     return glGetError();
 }
 
-
 JNIEXPORT void JNICALL
 Java_jp_co_cyberagent_android_gpuimage_GPUImageNativeLibrary_adjustBitmap(JNIEnv *jenv, jclass thiz,
                                                                        jobject src) {

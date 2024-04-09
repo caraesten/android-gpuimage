@@ -275,7 +275,8 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
     private void adjustImageScaling() {
         float outputWidth = this.outputWidth;
         float outputHeight = this.outputHeight;
-        if (rotation == Rotation.ROTATION_270 || rotation == Rotation.ROTATION_90) {
+        boolean flipSides = rotation == Rotation.ROTATION_270 || rotation == Rotation.ROTATION_90;
+        if (flipSides) {
             outputWidth = this.outputHeight;
             outputHeight = this.outputWidth;
         }
@@ -301,11 +302,21 @@ public class GPUImageRenderer implements GLSurfaceView.Renderer, GLTextureView.R
                     addDistance(textureCords[6], distHorizontal), addDistance(textureCords[7], distVertical),
             };
         } else {
+            final float widthRatioFinal;
+            final float heightRatioFinal;
+
+            if (flipSides) {
+                widthRatioFinal = ratioHeight;
+                heightRatioFinal = ratioWidth;
+            } else {
+                widthRatioFinal = ratioWidth;
+                heightRatioFinal = ratioHeight;
+            }
             cube = new float[]{
-                    CUBE[0] / ratioHeight, CUBE[1] / ratioWidth,
-                    CUBE[2] / ratioHeight, CUBE[3] / ratioWidth,
-                    CUBE[4] / ratioHeight, CUBE[5] / ratioWidth,
-                    CUBE[6] / ratioHeight, CUBE[7] / ratioWidth,
+                    CUBE[0] / heightRatioFinal, CUBE[1] / widthRatioFinal,
+                    CUBE[2] / heightRatioFinal, CUBE[3] / widthRatioFinal,
+                    CUBE[4] / heightRatioFinal, CUBE[5] / widthRatioFinal,
+                    CUBE[6] / heightRatioFinal, CUBE[7] / widthRatioFinal,
             };
         }
 
