@@ -77,8 +77,24 @@ public class OpenGlUtils {
                 GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, img, 0);
             }
         } else {
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, usedTexId);
-            GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, img);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && img.getConfig() == Config.HARDWARE) {
+                // TODO (work w/ float bitmaps)
+                final int type = GL_UNSIGNED_BYTE;
+                final int format;
+                final int bufferFormat = img.getHardwareBuffer().getFormat();
+                if (bufferFormat == HardwareBuffer.RGB_888) {
+                    format = GL_RGB;
+                } else if (bufferFormat == HardwareBuffer.RGBA_8888) {
+                    format = GL_RGBA;
+                } else {
+                    throw new IllegalStateException("Hardware buffers in just RGB_888 and RGBA_8888 supported");
+                }
+                final int result =GPUImageNativeLibrary.drawHardwareBufferToTextureWithId(usedTexId, format, type, img.getWidth(), img.getHeight(), img.getHardwareBuffer());
+                Log.d("CaraTest", "Result: " + result);
+            } else {
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, usedTexId);
+                 GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, img);
+            }
             textures[0] = usedTexId;
         }
         if (recycle) {

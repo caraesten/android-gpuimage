@@ -140,6 +140,26 @@ Java_jp_co_cyberagent_android_gpuimage_GPUImageNativeLibrary_drawHardwareBufferT
     return glGetError();
 }
 
+JNIEXPORT int JNICALL
+Java_jp_co_cyberagent_android_gpuimage_GPUImageNativeLibrary_drawHardwareBufferToTextureWithId(
+        JNIEnv *jenv, jclass thiz, jint textureId, jint format, jint type, jint width, jint height, jobject hardwareBufferObj) {
+    // TODO (factor out into a separate class, surround w/ API 26 checks)
+    AHardwareBuffer* hardwareBuffer = AHardwareBuffer_fromHardwareBuffer(jenv, hardwareBufferObj);
+    void* bufferPtr;
+    int res = AHardwareBuffer_lock(hardwareBuffer, AHARDWAREBUFFER_USAGE_CPU_READ_RARELY, -1, NULL, &bufferPtr);
+    if (res != 0) {
+        return -1;
+    }
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, type, bufferPtr);
+    int res2 = AHardwareBuffer_unlock(hardwareBuffer, NULL);
+    if (res2 != 0) {
+        return -2;
+    }
+    return glGetError();
+
+}
+
 JNIEXPORT void JNICALL
 Java_jp_co_cyberagent_android_gpuimage_GPUImageNativeLibrary_adjustBitmap(JNIEnv *jenv, jclass thiz,
                                                                        jobject src) {

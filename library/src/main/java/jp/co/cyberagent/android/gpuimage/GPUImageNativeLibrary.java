@@ -31,4 +31,6 @@ public class GPUImageNativeLibrary {
     public static native void adjustBitmap(Bitmap srcBitmap);
 
     public static native int drawHardwareBufferToTexture(int width, int height, int format, int internalFormat, int type, HardwareBuffer hardwareBuffer);
+
+    public static native int drawHardwareBufferToTextureWithId(int textureId, int format, int type, int width, int height, HardwareBuffer hardwareBuffer);
 }
