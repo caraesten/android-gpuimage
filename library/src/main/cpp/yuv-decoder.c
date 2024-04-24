@@ -1,7 +1,7 @@
 #include <jni.h>
 
 #include <android/bitmap.h>
-#include <GLES2/gl2.h>
+#include <GLES3/gl3.h>
 #include <android/hardware_buffer_jni.h>
 
 JNIEXPORT void JNICALL
@@ -127,12 +127,19 @@ Java_jp_co_cyberagent_android_gpuimage_GPUImageNativeLibrary_drawHardwareBufferT
         JNIEnv *jenv, jclass thiz, jint width, jint height, jint format, jint internalFormat, jint type, jobject hardwareBufferObj) {
     // TODO (factor out into a separate class, surround w/ API 26 checks)
     AHardwareBuffer* hardwareBuffer = AHardwareBuffer_fromHardwareBuffer(jenv, hardwareBufferObj);
+    AHardwareBuffer_Desc desc;
+    AHardwareBuffer_describe(hardwareBuffer, &desc);
+
     void* bufferPtr;
+
     int res = AHardwareBuffer_lock(hardwareBuffer, AHARDWAREBUFFER_USAGE_CPU_READ_RARELY, -1, NULL, &bufferPtr);
+
     if (res != 0) {
         return -1;
     }
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, bufferPtr);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, desc.stride);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, desc.width, desc.height, 0, format, type, bufferPtr);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
     int res2 = AHardwareBuffer_unlock(hardwareBuffer, NULL);
     if (res2 != 0) {
         return -2;

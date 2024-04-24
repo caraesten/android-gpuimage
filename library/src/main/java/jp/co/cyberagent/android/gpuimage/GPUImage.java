@@ -75,8 +75,8 @@ public class GPUImage {
      * @param context the context
      */
     public GPUImage(final Context context) {
-        if (!supportsOpenGLES2(context)) {
-            throw new IllegalStateException("OpenGL ES 2.0 is not supported on this phone.");
+        if (!supportsOpenGLES3(context)) {
+            throw new IllegalStateException("OpenGL ES 3.0 is not supported on this phone.");
         }
 
         this.context = context;
@@ -85,12 +85,12 @@ public class GPUImage {
     }
 
     /**
-     * Checks if OpenGL ES 2.0 is supported on the current device.
+     * Checks if OpenGL ES 3.0 is supported on the current device.
      *
      * @param context the context
      * @return true, if successful
      */
-    private boolean supportsOpenGLES2(final Context context) {
+    private boolean supportsOpenGLES3(final Context context) {
         final ActivityManager activityManager = (ActivityManager)
                 context.getSystemService(Context.ACTIVITY_SERVICE);
         final ConfigurationInfo configurationInfo =
@@ -122,7 +122,7 @@ public class GPUImage {
     public void setGLTextureView(final GLTextureView view) {
         surfaceType = SURFACE_TYPE_TEXTURE_VIEW;
         glTextureView = view;
-        glTextureView.setEGLContextClientVersion(2);
+        glTextureView.setEGLContextClientVersion(3);
         glTextureView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         glTextureView.setOpaque(false);
         glTextureView.setRenderer(renderer);

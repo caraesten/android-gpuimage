@@ -9,7 +9,7 @@ Idea from: [iOS GPUImage framework](https://github.com/BradLarson/GPUImage2)
 Goal is to have something as similar to GPUImage as possible. Vertex and fragment shaders are exactly the same. That way it makes it easier to port filters from GPUImage iOS to Android.
 
 ## Requirements
-* Android 2.2 or higher (OpenGL ES 2.0)
+* Android 2.2 or higher (OpenGL ES 3.0)
 
 ## Usage
 
