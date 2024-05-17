@@ -28,6 +28,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
+
+    android.libraryVariants.configureEach { variant ->
+        variant.outputs.all { file ->
+            if (file.outputFileName.endsWith('.aar')) {
+                file.outputFileName = "gpuimage-${variant.buildType.name}.aar"
+            }
+        }
+    }
 }
 
 ext {

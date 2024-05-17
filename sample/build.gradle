@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 android {
     compileSdk COMPILE_SDK_VERSION as int
 
-    namespace = "jp.co.cyberagent.android.gpuimage"
+    namespace = "jp.co.cyberagent.android.gpuimage.sample"
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int

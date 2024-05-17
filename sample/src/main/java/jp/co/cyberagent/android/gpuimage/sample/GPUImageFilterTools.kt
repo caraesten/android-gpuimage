@@ -21,7 +21,6 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.PointF
 import android.opengl.Matrix
-import jp.co.cyberagent.android.gpuimage.R
 import jp.co.cyberagent.android.gpuimage.filter.*
 import java.util.*
 

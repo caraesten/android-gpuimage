@@ -16,19 +16,18 @@
 
 package jp.co.cyberagent.android.gpuimage.sample.activity
 
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import jp.co.cyberagent.android.gpuimage.GPUImageTextureView
 import jp.co.cyberagent.android.gpuimage.GPUImageView
-import jp.co.cyberagent.android.gpuimage.R
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 import jp.co.cyberagent.android.gpuimage.sample.GPUImageFilterTools
 import jp.co.cyberagent.android.gpuimage.sample.GPUImageFilterTools.FilterAdjuster
-import jp.co.cyberagent.android.gpuimage.sample.utils.Camera1Loader
+import jp.co.cyberagent.android.gpuimage.sample.R
 import jp.co.cyberagent.android.gpuimage.sample.utils.Camera2Loader
 import jp.co.cyberagent.android.gpuimage.sample.utils.CameraLoader
 import jp.co.cyberagent.android.gpuimage.sample.utils.doOnLayout
@@ -36,20 +35,16 @@ import jp.co.cyberagent.android.gpuimage.util.Rotation
 
 class CameraActivity : AppCompatActivity() {
 
-    private val gpuImageView: GPUImageView by lazy { findViewById<GPUImageView>(jp.co.cyberagent.android.gpuimage.R.id.surfaceView) }
-    private val seekBar: SeekBar by lazy { findViewById<SeekBar>(jp.co.cyberagent.android.gpuimage.R.id.seekBar) }
+    private val gpuImageView: GPUImageTextureView by lazy { findViewById(R.id.surfaceView) }
+    private val seekBar: SeekBar by lazy { findViewById(R.id.seekBar) }
     private val cameraLoader: CameraLoader by lazy {
-        if (Build.VERSION.SDK_INT < 21) {
-            Camera1Loader(this)
-        } else {
-            Camera2Loader(this)
-        }
+        Camera2Loader(this)
     }
     private var filterAdjuster: FilterAdjuster? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(jp.co.cyberagent.android.gpuimage.R.layout.activity_camera)
+        setContentView(R.layout.activity_camera)
 
         seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -59,13 +54,13 @@ class CameraActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
-        findViewById<View>(jp.co.cyberagent.android.gpuimage.R.id.button_choose_filter).setOnClickListener {
+        findViewById<View>(R.id.button_choose_filter).setOnClickListener {
             GPUImageFilterTools.showDialog(this) { filter -> switchFilterTo(filter) }
         }
-        findViewById<View>(jp.co.cyberagent.android.gpuimage.R.id.button_capture).setOnClickListener {
+        findViewById<View>(R.id.button_capture).setOnClickListener {
             saveSnapshot()
         }
-        findViewById<View>(jp.co.cyberagent.android.gpuimage.R.id.img_switch_camera).run {
+        findViewById<View>(R.id.img_switch_camera).run {
             if (!cameraLoader.hasMultipleCamera()) {
                 visibility = View.GONE
             }

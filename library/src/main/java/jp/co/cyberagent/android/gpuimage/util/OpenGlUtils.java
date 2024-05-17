@@ -73,7 +73,6 @@ public class OpenGlUtils {
                 // TODO (work w/ float bitmaps)
                 final int type = GL_UNSIGNED_BYTE;
                 final int result = GPUImageNativeLibrary.drawHardwareBufferToTexture(img.getWidth(), img.getHeight(), format, internalFormat, type, img.getHardwareBuffer());
-                Log.d("CaraTest", "Result: " + result);
             } else {
                 GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, img, 0);
             }
@@ -90,12 +89,10 @@ public class OpenGlUtils {
                 } else {
                     throw new IllegalStateException("Hardware buffers in just RGB_888 and RGBA_8888 supported");
                 }
-                final int result =GPUImageNativeLibrary.drawHardwareBufferToTextureWithId(usedTexId, format, type, img.getWidth(), img.getHeight(), img.getHardwareBuffer());
-                Log.d("CaraTest", "Result: " + result);
+                GPUImageNativeLibrary.drawHardwareBufferToTextureWithId(usedTexId, format, type, img.getWidth(), img.getHeight(), img.getHardwareBuffer());
             } else {
                 GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, usedTexId);
                 GLUtils.texSubImage2D(GLES30.GL_TEXTURE_2D, 0, 0, 0, img);
-                Log.d("CaraTest", "Result load: " + GLES30.glGetError());
             }
             textures[0] = usedTexId;
         }

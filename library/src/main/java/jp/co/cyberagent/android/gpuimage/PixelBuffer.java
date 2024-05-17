@@ -9,6 +9,7 @@
 package jp.co.cyberagent.android.gpuimage;
 
 import android.graphics.Bitmap;
+import android.opengl.EGL14;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 
@@ -69,7 +70,7 @@ public class PixelBuffer {
 
         // eglContext = egl10.eglCreateContext(eglDisplay, eglConfig,
         // EGL_NO_CONTEXT, null);
-        int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
+        int EGL_CONTEXT_CLIENT_VERSION = EGL14.EGL_CONTEXT_CLIENT_VERSION;
         int[] attrib_list = {
                 EGL_CONTEXT_CLIENT_VERSION, 2,
                 EGL10.EGL_NONE

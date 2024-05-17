@@ -41,7 +41,7 @@ public class GPUImageGaussianBlurFilter extends GPUImageTwoPassTextureSamplingFi
                     "	// Calculate the positions for the blur\n" +
                     "	int multiplier = 0;\n" +
                     "	vec2 blurStep;\n" +
-                    "   vec2 singleStepOffset = vec2(texelHeightOffset, texelWidthOffset);\n" +
+                    "   vec2 singleStepOffset = vec2(texelWidthOffset, texelHeightOffset);\n" +
                     "    \n" +
                     "	for (int i = 0; i < GAUSSIAN_SAMPLES; i++)\n" +
                     "   {\n" +

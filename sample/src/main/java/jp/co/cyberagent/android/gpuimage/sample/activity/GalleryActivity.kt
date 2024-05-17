@@ -23,20 +23,22 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import jp.co.cyberagent.android.gpuimage.GPUImageTextureView
 import jp.co.cyberagent.android.gpuimage.GPUImageView
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter
 import jp.co.cyberagent.android.gpuimage.sample.GPUImageFilterTools
 import jp.co.cyberagent.android.gpuimage.sample.GPUImageFilterTools.FilterAdjuster
+import jp.co.cyberagent.android.gpuimage.sample.R
 
 class GalleryActivity : AppCompatActivity() {
 
     private var filterAdjuster: FilterAdjuster? = null
-    private val gpuImageView: GPUImageView by lazy { findViewById<GPUImageView>(jp.co.cyberagent.android.gpuimage.R.id.gpuimage) }
-    private val seekBar: SeekBar by lazy { findViewById<SeekBar>(jp.co.cyberagent.android.gpuimage.R.id.seekBar) }
+    private val gpuImageView: GPUImageTextureView by lazy { findViewById(R.id.gpuimage) }
+    private val seekBar: SeekBar by lazy { findViewById(R.id.seekBar) }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(jp.co.cyberagent.android.gpuimage.R.layout.activity_gallery)
+        setContentView(R.layout.activity_gallery)
 
         seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -48,13 +50,13 @@ class GalleryActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
-        findViewById<View>(jp.co.cyberagent.android.gpuimage.R.id.button_choose_filter).setOnClickListener {
+        findViewById<View>(R.id.button_choose_filter).setOnClickListener {
             GPUImageFilterTools.showDialog(this) { filter ->
                 switchFilterTo(filter)
                 gpuImageView.requestRender()
             }
         }
-        findViewById<View>(jp.co.cyberagent.android.gpuimage.R.id.button_save).setOnClickListener { saveImage() }
+        findViewById<View>(R.id.button_save).setOnClickListener { saveImage() }
 
         startPhotoPicker()
     }

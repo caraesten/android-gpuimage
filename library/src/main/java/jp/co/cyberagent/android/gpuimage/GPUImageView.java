@@ -44,13 +44,8 @@ import java.util.concurrent.Semaphore;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter;
 import jp.co.cyberagent.android.gpuimage.util.Rotation;
 
-import static jp.co.cyberagent.android.gpuimage.GPUImage.SURFACE_TYPE_SURFACE_VIEW;
-import static jp.co.cyberagent.android.gpuimage.GPUImage.SURFACE_TYPE_TEXTURE_VIEW;
-
-public class GPUImageView extends FrameLayout {
-
-    private int surfaceType = SURFACE_TYPE_SURFACE_VIEW;
-    private View surfaceView;
+public abstract class GPUImageView<T extends View> extends FrameLayout {
+    private T surfaceView;
     private GPUImage gpuImage;
     private boolean isShowLoading = true;
     private GPUImageFilter filter;
@@ -74,22 +69,28 @@ public class GPUImageView extends FrameLayout {
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.GPUImageView, 0, 0);
             try {
-                surfaceType = a.getInt(R.styleable.GPUImageView_gpuimage_surface_type, surfaceType);
                 isShowLoading = a.getBoolean(R.styleable.GPUImageView_gpuimage_show_loading, isShowLoading);
             } finally {
                 a.recycle();
             }
         }
         gpuImage = new GPUImage(context);
-        if (surfaceType == SURFACE_TYPE_TEXTURE_VIEW) {
-            surfaceView = new GPUImageGLTextureView(context, attrs);
+        surfaceView = generateSurfaceView(context, attrs);
+        if (surfaceView instanceof GLTextureView) {
             gpuImage.setGLTextureView((GLTextureView) surfaceView);
-        } else {
-            surfaceView = new GPUImageGLSurfaceView(context, attrs);
+        } else if (surfaceView instanceof GLSurfaceView) {
             gpuImage.setGLSurfaceView((GLSurfaceView) surfaceView);
+        } else {
+            throw new IllegalStateException("GPUImageView requires a surface or texture view");
         }
         addView(surfaceView);
     }
+
+    public T getSurfaceView() {
+        return surfaceView;
+    }
+
+    protected abstract T generateSurfaceView(Context context, AttributeSet attrs);
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -451,7 +452,7 @@ public class GPUImageView extends FrameLayout {
         }
     }
 
-    private class GPUImageGLSurfaceView extends GLSurfaceView {
+    protected class GPUImageGLSurfaceView extends GLSurfaceView {
         public GPUImageGLSurfaceView(Context context) {
             super(context);
         }
@@ -471,7 +472,7 @@ public class GPUImageView extends FrameLayout {
         }
     }
 
-    private class GPUImageGLTextureView extends GLTextureView {
+    protected class GPUImageGLTextureView extends GLTextureView {
         public GPUImageGLTextureView(Context context) {
             super(context);
         }
